@@ -54,62 +54,40 @@ a:focus-visible,button:focus-visible,input:focus-visible,[tabindex]:focus-visibl
 .skip-link:focus{left:8px;top:8px;color:#fff}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 
-/* ---- Document-control banner ---- */
-.doc-banner{
-  background:var(--blue-deep);color:#DCE6EF;font-family:var(--mono);
-  font-size:11.5px;letter-spacing:.06em;text-align:center;
-  padding:6px 12px;text-transform:uppercase
-}
-.doc-banner strong{color:var(--gold-bright);font-weight:600}
-
 /* ---- Reading progress ---- */
 .read-progress{position:fixed;top:0;left:0;height:3px;width:0%;background:var(--gold-bright);z-index:150;transition:width .15s linear}
 
-/* ---- App shell ---- */
-.shell{display:grid;grid-template-columns:280px 1fr;min-height:100vh}
-.sidebar{
-  background:var(--panel);border-right:1px solid var(--line);
-  padding:26px 0 40px;position:sticky;top:0;height:100vh;overflow-y:auto
+/* ---- Site header ---- */
+.site-head{position:sticky;top:0;z-index:120;background:var(--panel);border-bottom:1px solid var(--line)}
+.head-inner{max-width:1160px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:12px 28px}
+.logo{display:flex;align-items:center;gap:11px;text-decoration:none;color:var(--ink)}
+.logo:hover{color:var(--ink)}
+.logo-mark{flex:none;display:block}
+.logo-text{display:flex;flex-direction:column;line-height:1.18}
+.logo-name{font-family:var(--serif);font-weight:700;font-size:20px;color:var(--blue-deep);letter-spacing:.01em}
+.logo-tag{font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--steel)}
+.main-nav{display:flex;align-items:center;gap:2px}
+.main-nav .nav-link,.drop-btn{
+  display:inline-flex;align-items:center;gap:6px;padding:9px 12px 7px;
+  font-family:var(--sans);font-size:14.5px;font-weight:600;color:var(--ink);
+  text-decoration:none;background:none;border:none;cursor:pointer;
+  border-bottom:3px solid transparent;transition:background .15s
 }
-.brand{padding:0 24px 20px;border-bottom:1px solid var(--line)}
-.brand .org{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--steel);text-transform:uppercase}
-.brand h1{font-family:var(--serif);font-size:19px;font-weight:700;line-height:1.35;margin-top:6px;color:var(--ink)}
-.brand .sub{font-size:12.5px;color:var(--steel);margin-top:4px}
-
-nav.tutorial-nav{padding:14px 12px 0}
-.nav-group{margin-bottom:14px}
-.nav-group-label{
-  font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;color:var(--steel);
-  text-transform:uppercase;padding:6px 14px
+.main-nav .nav-link:hover,.drop-btn:hover{background:var(--wash);color:var(--blue-deep)}
+.main-nav > .nav-link[aria-current="page"],.dropdown.current > .drop-btn{color:var(--blue-deep);border-bottom-color:var(--gold-bright)}
+.dropdown{position:relative}
+.drop-btn .caret{font-size:11px;color:var(--steel)}
+.drop-menu{
+  position:absolute;top:calc(100% + 8px);left:0;min-width:300px;background:var(--panel);
+  border:1px solid var(--line);border-radius:8px;box-shadow:0 10px 26px rgba(22,53,79,.16);
+  padding:6px;display:none;z-index:130
 }
-.nav-link{
-  display:flex;align-items:center;gap:10px;padding:9px 14px;border-radius:6px;
-  color:var(--ink);text-decoration:none;font-size:14.5px;font-weight:500;
-  border-left:3px solid transparent;transition:background .15s
-}
-.nav-link:hover{background:var(--wash);color:var(--ink)}
-.nav-link[aria-current="page"]{
-  background:var(--wash);border-left-color:var(--gold-bright);font-weight:700;color:var(--blue-deep)
-}
-.nav-dot{
-  width:9px;height:9px;border-radius:50%;border:1.5px solid var(--steel);
-  flex:none;background:transparent
-}
-.nav-link.visited .nav-dot{background:var(--green);border-color:var(--green)}
-.nav-link[aria-current="page"] .nav-dot{border-color:var(--gold);background:var(--gold-bright)}
-.nav-progress{
-  margin:18px 24px 0;font-size:12.5px;color:var(--steel)
-}
-.nav-progress .bar{height:6px;background:var(--wash);border-radius:3px;overflow:hidden;margin-top:6px}
-.nav-progress .fill{height:100%;background:var(--green);width:0%;border-radius:3px;transition:width .3s}
-
-/* ---- Top bar ---- */
-.topbar{
-  display:flex;align-items:center;justify-content:space-between;gap:12px;
-  padding:14px 34px;border-bottom:1px solid var(--line);background:var(--panel);
-  position:sticky;top:0;z-index:100
-}
-.crumbs{font-size:13.5px;color:var(--steel)}
+.dropdown.open .drop-menu{display:block}
+.drop-menu .nav-link{display:block;width:100%;padding:10px 12px;border-radius:6px;border-bottom:none;font-weight:500}
+.drop-menu .nav-link[aria-current="page"]{background:var(--wash);color:var(--blue-deep);font-weight:700;box-shadow:inset 3px 0 0 var(--gold-bright)}
+.sub-bar{background:var(--wash);border-top:1px solid var(--line)}
+.sub-inner{max-width:1160px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:7px 28px}
+.crumbs{font-size:13px;color:var(--steel)}
 .crumbs .sep{margin:0 7px;color:var(--line)}
 .crumbs .here{color:var(--ink);font-weight:600}
 .step-count{font-family:var(--mono);font-size:12px;color:var(--steel);white-space:nowrap}
@@ -228,16 +206,6 @@ tr.hl{background:var(--amber-wash)!important;outline:2px solid var(--gold-bright
 .rec .meta{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 0;font-size:12.5px}
 .rec p{font-size:14.5px;color:var(--steel);margin:6px 0 0}
 
-/* ---- Quiz ---- */
-.quiz-q{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:20px;margin-bottom:18px}
-.quiz-q legend{font-weight:700;font-size:15.5px;padding:0 4px}
-.quiz-q fieldset{border:none}
-.quiz-opt{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:6px;cursor:pointer;font-size:14.5px}
-.quiz-opt:hover{background:var(--wash)}
-.quiz-opt input{margin-top:4px;accent-color:var(--blue)}
-.quiz-fb{display:none;margin-top:10px;padding:10px 14px;border-radius:6px;font-size:14px;font-weight:500}
-.quiz-fb.ok{display:block;background:var(--green-wash);color:var(--green);border:1px solid var(--green)}
-.quiz-fb.no{display:block;background:var(--red-wash);color:var(--red);border:1px solid var(--red)}
 .btn{
   display:inline-block;background:var(--blue-deep);color:#fff;border:none;border-radius:6px;
   padding:11px 22px;font:inherit;font-weight:700;font-size:15px;cursor:pointer;text-decoration:none
@@ -245,7 +213,6 @@ tr.hl{background:var(--amber-wash)!important;outline:2px solid var(--gold-bright
 .btn:hover{background:var(--blue);color:#fff}
 .btn.ghost{background:var(--panel);color:var(--blue-deep);border:1.5px solid var(--blue-deep)}
 .btn.ghost:hover{background:var(--wash)}
-.quiz-score{display:none;margin-top:8px}
 
 /* ---- Prev / next ---- */
 .pager{
@@ -275,79 +242,73 @@ footer.site-footer{
 footer.site-footer p{margin-bottom:4px}
 
 /* ---- Responsive ---- */
-@media (max-width:960px){
-  .shell{grid-template-columns:1fr}
-  .sidebar{
-    position:fixed;left:0;top:0;bottom:0;width:290px;z-index:160;height:100vh;
-    transform:translateX(-100%);transition:transform .22s ease;box-shadow:0 0 30px rgba(0,0,0,.15)
-  }
-  .sidebar.open{transform:translateX(0)}
+@media (max-width:1020px){
   .menu-btn{display:inline-block}
-  .topbar{padding:12px 18px}
+  .head-inner{padding:12px 18px}
+  .main-nav{
+    display:none;position:absolute;top:100%;left:0;right:0;background:var(--panel);
+    border-bottom:1px solid var(--line);flex-direction:column;align-items:stretch;
+    padding:10px 14px 14px;gap:2px;box-shadow:0 14px 26px rgba(22,53,79,.14)
+  }
+  .main-nav.open{display:flex}
+  .main-nav .nav-link,.drop-btn{border-bottom:none;padding:11px 12px;width:100%;text-align:left}
+  .main-nav > .nav-link[aria-current="page"]{background:var(--wash);box-shadow:inset 3px 0 0 var(--gold-bright)}
+  .dropdown{position:static}
+  .drop-btn{justify-content:space-between}
+  .drop-menu{position:static;min-width:0;border:none;box-shadow:none;padding:0 0 0 16px}
+  .sub-inner{padding:7px 18px}
+  .step-count{display:none}
   .page{padding:30px 18px 20px}
   .page h2{font-size:27px}
   .card-grid{grid-template-columns:1fr}
   .rec{grid-template-columns:44px 1fr}
   footer.site-footer{padding:20px 18px 28px}
-  .step-count{display:none}
 }
-.overlay{display:none;position:fixed;inset:0;background:rgba(20,32,44,.45);z-index:155}
-.overlay.show{display:block}
 </style>
 </head>
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <div class="read-progress" id="readProgress" aria-hidden="true"></div>
-<div class="doc-banner">Meridian Defense Systems Intranet&nbsp;// <strong>Management Tutorial</strong>&nbsp;// Unclassified — Training Material</div>
-<div class="shell">
-
-<!-- ================= SIDEBAR ================= -->
-<aside class="sidebar" id="sidebar" aria-label="Tutorial navigation">
-  <div class="brand">
-    <div class="org">ISSC698 · Capstone Tutorial</div>
-    <h1>Securing VPN &amp; APN Access in the Defense Industrial Base</h1>
-    <div class="sub">A tutorial for Meridian management</div>
+<header class="site-head">
+  <div class="head-inner">
+    <a class="logo" href="#home" aria-label="Meridian Defense — home">
+      <svg class="logo-mark" viewBox="0 0 48 48" width="40" height="40" aria-hidden="true" focusable="false">
+        <path d="M24 3 42 10v13c0 11-7.6 18.6-18 22C13.6 41.6 6 34 6 23V10Z" fill="#16354F" stroke="#C9971C" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M24 15.6V9.6M19.7 22.3l-6.4 3.6M28.3 22.3l6.4 3.6" stroke="#7FA7C8" stroke-width="1.8" stroke-linecap="round"/>
+        <circle cx="24" cy="8.6" r="1.7" fill="#7FA7C8"/>
+        <circle cx="12.2" cy="26.6" r="1.7" fill="#7FA7C8"/>
+        <circle cx="35.8" cy="26.6" r="1.7" fill="#7FA7C8"/>
+        <circle cx="24" cy="20" r="4.4" fill="none" stroke="#C9971C" stroke-width="2.2"/>
+        <path d="M24 24.4V33" stroke="#C9971C" stroke-width="2.2" stroke-linecap="round"/>
+      </svg>
+      <span class="logo-text"><span class="logo-name">Meridian Defense</span><span class="logo-tag">Cybersecurity Tutorial</span></span>
+    </a>
+    <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="mainNav">&#9776; Menu</button>
+    <nav class="main-nav" id="mainNav" aria-label="Main navigation">
+      <a class="nav-link" href="#home" data-page-link="home">Home</a>
+      <a class="nav-link" href="#background" data-page-link="background">Background</a>
+      <div class="dropdown" id="domainsDrop">
+        <button class="drop-btn" id="dropBtn" aria-expanded="false" aria-haspopup="true">Domains <span class="caret" aria-hidden="true">&#9662;</span></button>
+        <div class="drop-menu">
+          <a class="nav-link" href="#domain-network" data-page-link="domain-network">1 &middot; Communications &amp; Networking</a>
+          <a class="nav-link" href="#domain-identity" data-page-link="domain-identity">2 &middot; Access &amp; Identity</a>
+          <a class="nav-link" href="#domain-secops" data-page-link="domain-secops">3 &middot; Security Operations</a>
+          <a class="nav-link" href="#domain-compliance" data-page-link="domain-compliance">4 &middot; Laws, Regulations &amp; Compliance</a>
+        </div>
+      </div>
+      <a class="nav-link" href="#risk" data-page-link="risk">Risk Assessment</a>
+      <a class="nav-link" href="#recommendations" data-page-link="recommendations">Recommendations</a>
+      <a class="nav-link" href="#references" data-page-link="references">References</a>
+    </nav>
   </div>
-  <nav class="tutorial-nav" aria-label="Tutorial sections">
-    <div class="nav-group">
-      <div class="nav-group-label">Orientation</div>
-      <a class="nav-link" href="#home" data-page-link="home"><span class="nav-dot" aria-hidden="true"></span>Home</a>
-      <a class="nav-link" href="#background" data-page-link="background"><span class="nav-dot" aria-hidden="true"></span>Background &amp; Scenario</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-label">Cybersecurity Domains</div>
-      <a class="nav-link" href="#domain-network" data-page-link="domain-network"><span class="nav-dot" aria-hidden="true"></span>Communications &amp; Networking</a>
-      <a class="nav-link" href="#domain-identity" data-page-link="domain-identity"><span class="nav-dot" aria-hidden="true"></span>Access &amp; Identity</a>
-      <a class="nav-link" href="#domain-secops" data-page-link="domain-secops"><span class="nav-dot" aria-hidden="true"></span>Security Operations</a>
-      <a class="nav-link" href="#domain-compliance" data-page-link="domain-compliance"><span class="nav-dot" aria-hidden="true"></span>Laws, Regulations &amp; Compliance</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-label">Assessment &amp; Action</div>
-      <a class="nav-link" href="#risk" data-page-link="risk"><span class="nav-dot" aria-hidden="true"></span>Risk Assessment</a>
-      <a class="nav-link" href="#recommendations" data-page-link="recommendations"><span class="nav-dot" aria-hidden="true"></span>Recommendations</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-label">Wrap-Up</div>
-      <a class="nav-link" href="#quiz" data-page-link="quiz"><span class="nav-dot" aria-hidden="true"></span>Knowledge Check</a>
-      <a class="nav-link" href="#references" data-page-link="references"><span class="nav-dot" aria-hidden="true"></span>References &amp; Resources</a>
-    </div>
-  </nav>
-  <div class="nav-progress">
-    <span id="visitedLabel">0 of 10 sections visited</span>
-    <div class="bar"><div class="fill" id="visitedFill"></div></div>
-  </div>
-</aside>
-<div class="overlay" id="overlay"></div>
-
-<!-- ================= MAIN ================= -->
-<div>
-  <div class="topbar">
-    <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="sidebar">☰ Menu</button>
+  <div class="sub-bar"><div class="sub-inner">
     <div class="crumbs" id="crumbs" aria-live="polite">Home</div>
-    <div class="step-count" id="stepCount">Section 1 of 10</div>
-  </div>
+    <div class="step-count" id="stepCount">Section 1 of 9</div>
+  </div></div>
+</header>
 
-  <main id="main-content">
+<main id="main-content">
+
 
   <!-- ============ HOME ============ -->
   <section class="page" data-page="home" data-title="Home" data-group="Orientation">
@@ -363,7 +324,7 @@ footer.site-footer p{margin-bottom:4px}
     </div>
 
     <h3>How to use this tutorial</h3>
-    <p>Work through the sections in order using the <strong>Continue</strong> button at the bottom of each page, or jump directly to any section from the navigation menu. Green dots mark the sections you have already visited, and the progress bar at the top of the screen tracks your position on each page. The tutorial ends with a short knowledge check.</p>
+    <p>Work through the sections in order using the <strong>Continue</strong> button at the bottom of each page, or jump directly to any section from the menu at the top of the screen &mdash; the four cybersecurity domains are grouped under <strong>Domains</strong>. The bar beneath the header always shows where you are in the tutorial, and the thin gold line at the very top of the window tracks your reading position on each page.</p>
 
     <h3>The four domains covered</h3>
     <p>The material is organized by the four cybersecurity domains that govern VPN and APN risk at Meridian:</p>
@@ -693,57 +654,9 @@ footer.site-footer p{margin-bottom:4px}
     <div class="pager"></div>
   </section>
 
-  <!-- ============ QUIZ ============ -->
-  <section class="page" data-page="quiz" data-title="Knowledge Check" data-group="Wrap-Up">
-    <div class="eyebrow">Wrap-up · Section 9</div>
-    <h2>Knowledge Check</h2>
-    <p class="lede">Five questions covering the key management takeaways. Answers are checked instantly — you can retake the check as many times as you like.</p>
-    <form id="quizForm" novalidate>
-      <div class="quiz-q"><fieldset>
-        <legend>1. Why must a VPN gateway be reachable from the open internet?</legend>
-        <label class="quiz-opt"><input type="radio" name="q1" value="a"> Because IT misconfigured it</label>
-        <label class="quiz-opt"><input type="radio" name="q1" value="b" data-correct> Because remote employees could not reach it otherwise — exposure is inherent to its function</label>
-        <label class="quiz-opt"><input type="radio" name="q1" value="c"> Because CMMC requires it</label>
-        <div class="quiz-fb" data-ok="Correct. VPN gateways and APNs are exposed by design — which is why their configuration and patching deserve standing attention." data-no="Not quite. The gateway must listen on a public address so remote employees can reach it. Exposure is inherent to its function."></div>
-      </fieldset></div>
-      <div class="quiz-q"><fieldset>
-        <legend>2. What SPRS score is required for final (not conditional) CMMC Level 2 status?</legend>
-        <label class="quiz-opt"><input type="radio" name="q2" value="a"> 88</label>
-        <label class="quiz-opt"><input type="radio" name="q2" value="b"> 100</label>
-        <label class="quiz-opt"><input type="radio" name="q2" value="c" data-correct> 110 — a perfect score; 88 earns only conditional status with a 180-day clock</label>
-        <div class="quiz-fb" data-ok="Correct. Budgeting to 88 as though it were compliance would be a mistake." data-no="Not quite. Final Level 2 requires all 110 requirements MET. A score of 88+ earns only conditional status, which expires if the POA&M is not closed within 180 days."></div>
-      </fieldset></div>
-      <div class="quiz-q"><fieldset>
-        <legend>3. What did the July 13, 2026 CMMC action actually suspend?</legend>
-        <label class="quiz-opt"><input type="radio" name="q3" value="a"> All DoD cybersecurity requirements for contractors</label>
-        <label class="quiz-opt"><input type="radio" name="q3" value="b" data-correct> Phase 2 third-party certification only — DFARS 252.204-7012 and SP 800-171 remain binding</label>
-        <label class="quiz-opt"><input type="radio" name="q3" value="c"> The NIST Cybersecurity Framework</label>
-        <div class="quiz-fb" data-ok="Correct. The pause came by memorandum, not regulation, and is restorable as quickly as it was withdrawn." data-no="Not quite. Only Phase 2 third-party certification was paused. Everything beneath it — DFARS 7012, SP 800-171, SPRS scoring, annual affirmation — remains in force."></div>
-      </fieldset></div>
-      <div class="quiz-q"><fieldset>
-        <legend>4. Why is centralizing VPN/APN session logs worth a moderate investment?</legend>
-        <label class="quiz-opt"><input type="radio" name="q4" value="a" data-correct> Breaches average 247 days to identify and contain, and incidents past 200 days cost significantly more</label>
-        <label class="quiz-opt"><input type="radio" name="q4" value="b"> Logs are required to renew the VPN license</label>
-        <label class="quiz-opt"><input type="radio" name="q4" value="c"> It reduces bandwidth costs</label>
-        <div class="quiz-fb" data-ok="Correct. Session data left on the appliance cannot alert anyone — and can be tampered with by whoever compromises the appliance." data-no="Not quite. The case is the detection gap: 247 days on average, with incidents past 200 days averaging $5.65M versus $4.32M (IBM, 2026)."></div>
-      </fieldset></div>
-      <div class="quiz-q"><fieldset>
-        <legend>5. R6 (lateral movement) is rated High. Why is it addressed last?</legend>
-        <label class="quiz-opt"><input type="radio" name="q5" value="a"> It is actually a low risk</label>
-        <label class="quiz-opt"><input type="radio" name="q5" value="b" data-correct> Its fix — a zero-trust transition — is a multi-year program; the deferral reflects timeline, not a lower assessment</label>
-        <label class="quiz-opt"><input type="radio" name="q5" value="c"> No framework addresses it</label>
-        <div class="quiz-fb" data-ok="Correct. Sequencing favors the fast, high-return fundamentals first while the ZTNA pilot begins the longer transition." data-no="Not quite. The rating stays High. The ranking reflects the multi-year implementation timeline of a zero-trust transition (SP 800-207)."></div>
-      </fieldset></div>
-      <p><button type="button" class="btn" id="gradeBtn">Check my answers</button>
-      <button type="button" class="btn ghost" id="resetBtn" style="display:none">Retake the check</button></p>
-      <div class="callout green quiz-score" id="scoreBox" role="status"><span class="tag">Your result</span><p id="scoreText"></p></div>
-    </form>
-    <div class="pager"></div>
-  </section>
-
   <!-- ============ REFERENCES ============ -->
   <section class="page" data-page="references" data-title="References &amp; Resources" data-group="Wrap-Up">
-    <div class="eyebrow">Wrap-up · Section 10</div>
+    <div class="eyebrow">Wrap-up · Section 9</div>
     <h2>References &amp; Resources</h2>
     <p class="lede">Every source cited in this tutorial and in the underlying executive summary, with live links to the authoritative originals. External links open in a new tab (marked ↗).</p>
     <h3>Government directives &amp; regulation</h3>
@@ -771,11 +684,7 @@ footer.site-footer p{margin-bottom:4px}
       <li>Qollakaj, K., Einler Larsson, L., &amp; Memeti, S. (2025). <a class="ext" href="https://www.sciencedirect.com/science/article/pii/S2590005625000645" target="_blank" rel="noopener">Cybersecurity of remote work migration: A study on the VPN security landscape post Covid-19 outbreak</a>. <em>Cyber Security and Applications</em>.</li>
       <li>Rapid7. (2026, June 8). <a class="ext" href="https://www.rapid7.com/blog/post/etr-critical-check-point-vpn-zero-day-exploited-in-the-wild-cve-2026-50751/" target="_blank" rel="noopener"><em>Critical Check Point VPN zero-day exploited in the wild (CVE-2026-50751)</em></a>.</li>
     </ul>
-    <div class="callout">
-      <span class="tag">About this tutorial</span>
-      <p>This web tutorial presents the findings of the cybersecurity executive summary <em>Securing VPN and APN Access in the Defense Industrial Base</em>, prepared for ISSC698 (Cybersecurity Studies: Capstone Practical), American Public University System. Meridian Defense Systems is a hypothetical organization used for instructional purposes.</p>
-    </div>
-    <div class="pager"></div>
+        <div class="pager"></div>
   </section>
 
   </main>
@@ -783,15 +692,13 @@ footer.site-footer p{margin-bottom:4px}
     <p><strong>Securing VPN &amp; APN Access in the Defense Industrial Base</strong> — a management web tutorial.</p>
     <p>Prepared by William Lewis · ISSC698 Cybersecurity Studies: Capstone Practical · American Public University System · 2026.</p>
   </footer>
-</div>
-</div>
 
 <button class="to-top" id="toTop" aria-label="Back to top">↑</button>
 <script>
 (function(){
   "use strict";
-  var ORDER = ["home","background","domain-network","domain-identity","domain-secops","domain-compliance","risk","recommendations","quiz","references"];
-  var pages = {}, links = {}, visited = {};
+  var ORDER = ["home","background","domain-network","domain-identity","domain-secops","domain-compliance","risk","recommendations","references"];
+  var pages = {}, links = {};
   ORDER.forEach(function(id){
     pages[id] = document.querySelector('.page[data-page="'+id+'"]');
     links[id] = document.querySelector('.nav-link[data-page-link="'+id+'"]');
@@ -799,8 +706,10 @@ footer.site-footer p{margin-bottom:4px}
 
   var crumbs = document.getElementById("crumbs");
   var stepCount = document.getElementById("stepCount");
-  var visitedLabel = document.getElementById("visitedLabel");
-  var visitedFill = document.getElementById("visitedFill");
+  var domainsDrop = document.getElementById("domainsDrop");
+  var dropBtn = document.getElementById("dropBtn");
+  var mainNav = document.getElementById("mainNav");
+  var menuBtn = document.getElementById("menuBtn");
 
   function decode(html){ var t=document.createElement("textarea"); t.innerHTML=html; return t.value; }
 
@@ -811,11 +720,11 @@ footer.site-footer p{margin-bottom:4px}
       var html = "";
       if(i > 0){
         var prev = pages[ORDER[i-1]];
-        html += '<a href="#'+ORDER[i-1]+'"><span class="dir">← Back</span><span class="ttl">'+prev.getAttribute("data-title")+'</span></a>';
+        html += '<a href="#'+ORDER[i-1]+'"><span class="dir">&larr; Back</span><span class="ttl">'+prev.getAttribute("data-title")+'</span></a>';
       }
       if(i < ORDER.length-1){
         var next = pages[ORDER[i+1]];
-        html += '<a class="next" href="#'+ORDER[i+1]+'"><span class="dir">Continue →</span><span class="ttl">'+next.getAttribute("data-title")+'</span></a>';
+        html += '<a class="next" href="#'+ORDER[i+1]+'"><span class="dir">Continue &rarr;</span><span class="ttl">'+next.getAttribute("data-title")+'</span></a>';
       } else {
         html += '<a class="next" href="#home"><span class="dir">Finished</span><span class="ttl">Return to Home</span></a>';
       }
@@ -823,10 +732,14 @@ footer.site-footer p{margin-bottom:4px}
     });
   }
 
-  function updateVisited(){
-    var n = Object.keys(visited).length;
-    visitedLabel.textContent = n + " of " + ORDER.length + " sections visited";
-    visitedFill.style.width = Math.round(n/ORDER.length*100) + "%";
+  function closeDrop(){
+    domainsDrop.classList.remove("open");
+    dropBtn.setAttribute("aria-expanded","false");
+  }
+  function closeMenu(){
+    mainNav.classList.remove("open");
+    menuBtn.setAttribute("aria-expanded","false");
+    closeDrop();
   }
 
   function show(id){
@@ -836,22 +749,19 @@ footer.site-footer p{margin-bottom:4px}
       if(links[p]){
         if(p === id){ links[p].setAttribute("aria-current","page"); }
         else { links[p].removeAttribute("aria-current"); }
-        links[p].classList.toggle("visited", !!visited[p]);
       }
     });
-    visited[id] = true;
-    links[id].classList.add("visited");
-    updateVisited();
+    domainsDrop.classList.toggle("current", id.indexOf("domain-") === 0);
     var idx = ORDER.indexOf(id);
     var group = decode(pages[id].getAttribute("data-group"));
     var title = decode(pages[id].getAttribute("data-title"));
     crumbs.innerHTML = "";
     var g = document.createElement("span"); g.textContent = group;
-    var s = document.createElement("span"); s.className="sep"; s.textContent = "/";
-    var h = document.createElement("span"); h.className="here"; h.textContent = title;
+    var s = document.createElement("span"); s.className = "sep"; s.textContent = "/";
+    var h = document.createElement("span"); h.className = "here"; h.textContent = title;
     crumbs.appendChild(g); crumbs.appendChild(s); crumbs.appendChild(h);
     stepCount.textContent = "Section " + (idx+1) + " of " + ORDER.length;
-    document.title = title + " | Securing VPN & APN Access — Management Tutorial";
+    document.title = title + " | Meridian Defense — VPN & APN Security Tutorial";
     window.scrollTo(0,0);
     closeMenu();
   }
@@ -862,21 +772,26 @@ footer.site-footer p{margin-bottom:4px}
   }
   window.addEventListener("hashchange", route);
 
-  /* Mobile menu */
-  var sidebar = document.getElementById("sidebar");
-  var overlay = document.getElementById("overlay");
-  var menuBtn = document.getElementById("menuBtn");
-  function closeMenu(){
-    sidebar.classList.remove("open"); overlay.classList.remove("show");
-    menuBtn.setAttribute("aria-expanded","false");
-  }
-  menuBtn.addEventListener("click", function(){
-    var open = sidebar.classList.toggle("open");
-    overlay.classList.toggle("show", open);
-    menuBtn.setAttribute("aria-expanded", open ? "true" : "false");
+  /* Domains dropdown */
+  dropBtn.addEventListener("click", function(e){
+    e.stopPropagation();
+    var open = domainsDrop.classList.toggle("open");
+    dropBtn.setAttribute("aria-expanded", open ? "true" : "false");
   });
-  overlay.addEventListener("click", closeMenu);
-  document.addEventListener("keydown", function(e){ if(e.key === "Escape") closeMenu(); });
+  document.addEventListener("click", function(e){
+    if(!domainsDrop.contains(e.target)) closeDrop();
+  });
+  document.addEventListener("keydown", function(e){
+    if(e.key === "Escape"){ closeMenu(); }
+  });
+
+  /* Mobile menu */
+  menuBtn.addEventListener("click", function(e){
+    e.stopPropagation();
+    var open = mainNav.classList.toggle("open");
+    menuBtn.setAttribute("aria-expanded", open ? "true" : "false");
+    if(!open) closeDrop();
+  });
 
   /* Reading progress + back-to-top */
   var bar = document.getElementById("readProgress");
@@ -912,48 +827,6 @@ footer.site-footer p{margin-bottom:4px}
         hint.textContent = "Select a risk (R1\u2013R7) above to highlight it in the register.";
       }
     });
-  });
-
-  /* Quiz */
-  var gradeBtn = document.getElementById("gradeBtn");
-  var resetBtn = document.getElementById("resetBtn");
-  var scoreBox = document.getElementById("scoreBox");
-  var scoreText = document.getElementById("scoreText");
-  gradeBtn.addEventListener("click", function(){
-    var qs = document.querySelectorAll("#quizForm .quiz-q");
-    var answered = 0, correct = 0;
-    qs.forEach(function(q){
-      var picked = q.querySelector("input:checked");
-      var fb = q.querySelector(".quiz-fb");
-      fb.classList.remove("ok","no");
-      if(!picked){ return; }
-      answered++;
-      if(picked.hasAttribute("data-correct")){
-        correct++;
-        fb.textContent = fb.getAttribute("data-ok");
-        fb.classList.add("ok");
-      } else {
-        fb.textContent = fb.getAttribute("data-no");
-        fb.classList.add("no");
-      }
-    });
-    if(answered < qs.length){
-      scoreBox.style.display = "block";
-      scoreBox.className = "callout gold quiz-score";
-      scoreText.textContent = "You answered " + answered + " of " + qs.length + " questions. Answer the remaining " + (qs.length-answered) + " and check again.";
-    } else {
-      scoreBox.style.display = "block";
-      scoreBox.className = correct === qs.length ? "callout green quiz-score" : "callout quiz-score";
-      scoreText.textContent = "You scored " + correct + " of " + qs.length + "." + (correct === qs.length ? " Excellent — you have the management picture." : " Review the feedback above, then retake the check if you like.");
-      resetBtn.style.display = "inline-block";
-    }
-  });
-  resetBtn.addEventListener("click", function(){
-    document.querySelectorAll("#quizForm input:checked").forEach(function(i){ i.checked = false; });
-    document.querySelectorAll("#quizForm .quiz-fb").forEach(function(f){ f.classList.remove("ok","no"); f.textContent=""; });
-    scoreBox.style.display = "none";
-    resetBtn.style.display = "none";
-    window.scrollTo({top:0, behavior:"smooth"});
   });
 
   buildPagers();
