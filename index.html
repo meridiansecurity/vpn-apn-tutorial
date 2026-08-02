@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Securing VPN &amp; APN Access — A Management Tutorial | Meridian Defense Systems</title>
+<meta name="description" content="A web-based tutorial for company stakeholders on securing VPN and APN access in the Defense Industrial Base.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=IBM+Plex+Serif:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1B2A3A;
+  --steel:#4E6072;
+  --line:#D8DEE6;
+  --paper:#FBFCFD;
+  --panel:#FFFFFF;
+  --wash:#EFF3F6;
+  --blue:#1F4E79;
+  --blue-deep:#16354F;
+  --gold:#8A6200;
+  --gold-bright:#C9971C;
+  --red:#A6342C;
+  --red-wash:#F7ECEA;
+  --amber-wash:#F8F1DE;
+  --green:#2E6B4F;
+  --green-wash:#E9F2ED;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --serif:"IBM Plex Serif",Georgia,"Times New Roman",serif;
+  --sans:"Public Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+body{
+  font-family:var(--sans);
+  color:var(--ink);
+  background:var(--paper);
+  line-height:1.65;
+  font-size:16.5px;
+}
+a{color:var(--blue);text-decoration:underline;text-underline-offset:2px}
+a:hover{color:var(--blue-deep)}
+a:focus-visible,button:focus-visible,input:focus-visible,[tabindex]:focus-visible{
+  outline:3px solid var(--gold-bright);outline-offset:2px;border-radius:2px
+}
+.skip-link{
+  position:absolute;left:-9999px;top:0;background:var(--ink);color:#fff;
+  padding:10px 16px;z-index:200;font-weight:600;text-decoration:none
+}
+.skip-link:focus{left:8px;top:8px;color:#fff}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* ---- Document-control banner ---- */
+.doc-banner{
+  background:var(--blue-deep);color:#DCE6EF;font-family:var(--mono);
+  font-size:11.5px;letter-spacing:.06em;text-align:center;
+  padding:6px 12px;text-transform:uppercase
+}
+.doc-banner strong{color:var(--gold-bright);font-weight:600}
+
+/* ---- Reading progress ---- */
+.read-progress{position:fixed;top:0;left:0;height:3px;width:0%;background:var(--gold-bright);z-index:150;transition:width .15s linear}
+
+/* ---- App shell ---- */
+.shell{display:grid;grid-template-columns:280px 1fr;min-height:100vh}
+.sidebar{
+  background:var(--panel);border-right:1px solid var(--line);
+  padding:26px 0 40px;position:sticky;top:0;height:100vh;overflow-y:auto
+}
+.brand{padding:0 24px 20px;border-bottom:1px solid var(--line)}
+.brand .org{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--steel);text-transform:uppercase}
+.brand h1{font-family:var(--serif);font-size:19px;font-weight:700;line-height:1.35;margin-top:6px;color:var(--ink)}
+.brand .sub{font-size:12.5px;color:var(--steel);margin-top:4px}
+
+nav.tutorial-nav{padding:14px 12px 0}
+.nav-group{margin-bottom:14px}
+.nav-group-label{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;color:var(--steel);
+  text-transform:uppercase;padding:6px 14px
+}
+.nav-link{
+  display:flex;align-items:center;gap:10px;padding:9px 14px;border-radius:6px;
+  color:var(--ink);text-decoration:none;font-size:14.5px;font-weight:500;
+  border-left:3px solid transparent;transition:background .15s
+}
+.nav-link:hover{background:var(--wash);color:var(--ink)}
+.nav-link[aria-current="page"]{
+  background:var(--wash);border-left-color:var(--gold-bright);font-weight:700;color:var(--blue-deep)
+}
+.nav-dot{
+  width:9px;height:9px;border-radius:50%;border:1.5px solid var(--steel);
+  flex:none;background:transparent
+}
+.nav-link.visited .nav-dot{background:var(--green);border-color:var(--green)}
+.nav-link[aria-current="page"] .nav-dot{border-color:var(--gold);background:var(--gold-bright)}
+.nav-progress{
+  margin:18px 24px 0;font-size:12.5px;color:var(--steel)
+}
+.nav-progress .bar{height:6px;background:var(--wash);border-radius:3px;overflow:hidden;margin-top:6px}
+.nav-progress .fill{height:100%;background:var(--green);width:0%;border-radius:3px;transition:width .3s}
+
+/* ---- Top bar ---- */
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:14px 34px;border-bottom:1px solid var(--line);background:var(--panel);
+  position:sticky;top:0;z-index:100
+}
+.crumbs{font-size:13.5px;color:var(--steel)}
+.crumbs .sep{margin:0 7px;color:var(--line)}
+.crumbs .here{color:var(--ink);font-weight:600}
+.step-count{font-family:var(--mono);font-size:12px;color:var(--steel);white-space:nowrap}
+.menu-btn{display:none;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:8px 12px;font:inherit;font-weight:600;cursor:pointer;color:var(--ink)}
+
+/* ---- Main content ---- */
+main{min-width:0}
+.page{display:none;max-width:880px;margin:0 auto;padding:44px 34px 30px;animation:fadein .25s ease}
+.page.active{display:block}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+.eyebrow{
+  font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--gold);font-weight:600;margin-bottom:10px
+}
+.page h2{font-family:var(--serif);font-size:34px;font-weight:700;line-height:1.2;margin-bottom:8px;color:var(--ink)}
+.lede{font-size:18.5px;color:var(--steel);max-width:64ch;margin-bottom:26px}
+.page h3{font-family:var(--serif);font-size:22px;font-weight:600;margin:36px 0 12px;color:var(--blue-deep)}
+.page h4{font-size:16px;font-weight:700;margin:24px 0 8px}
+.page p{margin-bottom:14px;max-width:72ch}
+.page ul,.page ol{margin:0 0 16px 24px;max-width:70ch}
+.page li{margin-bottom:8px}
+.ext::after{content:" ↗";font-size:.82em;color:var(--steel)}
+
+.callout{
+  border:1px solid var(--line);border-left:4px solid var(--blue);background:var(--panel);
+  border-radius:8px;padding:16px 20px;margin:20px 0;max-width:72ch
+}
+.callout.gold{border-left-color:var(--gold-bright);background:var(--amber-wash)}
+.callout.red{border-left-color:var(--red);background:var(--red-wash)}
+.callout.green{border-left-color:var(--green);background:var(--green-wash)}
+.callout .tag{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;color:var(--steel);display:block;margin-bottom:6px}
+.callout p:last-child{margin-bottom:0}
+
+.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin:26px 0}
+.stat{
+  background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px 16px
+}
+.stat .num{font-family:var(--serif);font-size:30px;font-weight:700;color:var(--blue-deep);line-height:1.1}
+.stat .lbl{font-size:13px;color:var(--steel);margin-top:6px;line-height:1.45}
+
+.card-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:22px 0}
+.card{
+  background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:20px;
+  display:block;text-decoration:none;color:var(--ink);transition:border-color .15s,box-shadow .15s
+}
+a.card:hover{border-color:var(--blue);box-shadow:0 2px 10px rgba(22,53,79,.08);color:var(--ink)}
+.card .dnum{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;color:var(--gold);font-weight:600;text-transform:uppercase}
+.card h4{font-family:var(--serif);font-size:17.5px;margin:6px 0 6px;font-weight:600}
+.card p{font-size:14px;color:var(--steel);margin:0}
+
+table{border-collapse:collapse;width:100%;margin:18px 0;background:var(--panel);border:1px solid var(--line);font-size:14.5px}
+th{background:var(--wash);text-align:left;font-weight:700;font-size:13px;letter-spacing:.02em}
+th,td{padding:10px 13px;border:1px solid var(--line);vertical-align:top}
+tbody tr:hover{background:#F4F7FA}
+tr.hl{background:var(--amber-wash)!important;outline:2px solid var(--gold-bright);outline-offset:-2px}
+.table-wrap{overflow-x:auto;margin:18px 0}
+.table-wrap table{margin:0}
+
+.chip{
+  display:inline-block;font-family:var(--mono);font-size:12px;font-weight:600;
+  padding:2px 9px;border-radius:20px;border:1px solid transparent
+}
+.chip.crit{background:var(--red);color:#fff}
+.chip.high{background:var(--amber-wash);color:var(--gold);border-color:var(--gold-bright)}
+.chip.mod{background:var(--wash);color:var(--steel);border-color:var(--line)}
+.chip.low-cost{background:var(--green-wash);color:var(--green);border-color:var(--green)}
+
+/* ---- Timeline ---- */
+.timeline{list-style:none;margin:24px 0 8px;padding:0;border-left:2px solid var(--line);max-width:66ch}
+.timeline li{position:relative;padding:0 0 22px 26px;margin:0}
+.timeline li::before{
+  content:"";position:absolute;left:-7px;top:6px;width:12px;height:12px;border-radius:50%;
+  background:var(--panel);border:3px solid var(--blue)
+}
+.timeline .t-date{font-family:var(--mono);font-size:12.5px;color:var(--gold);font-weight:600;display:block}
+.timeline .t-title{font-weight:700}
+.timeline p{font-size:14.5px;color:var(--steel);margin:2px 0 0}
+
+/* ---- Attack chain ---- */
+.chain{counter-reset:step;list-style:none;margin:22px 0;max-width:66ch;padding:0}
+.chain li{
+  counter-increment:step;position:relative;padding:14px 18px 14px 62px;margin-bottom:10px;
+  background:var(--panel);border:1px solid var(--line);border-radius:8px
+}
+.chain li::before{
+  content:counter(step);position:absolute;left:16px;top:50%;transform:translateY(-50%);
+  width:30px;height:30px;border-radius:50%;background:var(--blue-deep);color:#fff;
+  font-family:var(--mono);font-weight:600;font-size:14px;display:flex;align-items:center;justify-content:center
+}
+.chain li strong{display:block}
+.chain li span{font-size:14px;color:var(--steel)}
+
+/* ---- Heat map ---- */
+.heatmap-wrap{margin:24px 0;max-width:680px}
+.heatmap{display:grid;grid-template-columns:110px repeat(3,1fr);gap:6px;font-size:13px}
+.hm-corner{display:flex;align-items:end;justify-content:center;font-family:var(--mono);font-size:10.5px;color:var(--steel);text-transform:uppercase;letter-spacing:.08em;text-align:center;padding-bottom:4px}
+.hm-axis{display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12.5px;background:var(--wash);border:1px solid var(--line);border-radius:6px;padding:8px 6px;text-align:center}
+.hm-cell{min-height:86px;border-radius:6px;border:1px solid var(--line);padding:8px;display:flex;flex-wrap:wrap;gap:6px;align-content:flex-start}
+.hm-cell .cell-tag{width:100%;font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;opacity:.75}
+.hm-crit{background:#F3DBD8}
+.hm-high{background:#F6EBCB}
+.hm-mod{background:#E6EDF3}
+.risk-chip{
+  font-family:var(--mono);font-size:12.5px;font-weight:600;background:var(--panel);
+  border:1.5px solid var(--steel);border-radius:6px;padding:3px 9px;cursor:pointer;color:var(--ink)
+}
+.risk-chip:hover{border-color:var(--blue);background:#fff}
+.risk-chip.active{border-color:var(--gold);background:var(--amber-wash);box-shadow:0 0 0 2px var(--gold-bright)}
+.hm-hint{font-size:13px;color:var(--steel);margin-top:10px}
+
+/* ---- Recommendation cards ---- */
+.rec{display:grid;grid-template-columns:56px 1fr;gap:16px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px;margin-bottom:14px}
+.rec .rank{font-family:var(--serif);font-size:30px;font-weight:700;color:var(--gold);line-height:1;text-align:center;padding-top:2px}
+.rec h4{margin:0 0 4px;font-size:16.5px}
+.rec .meta{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 0;font-size:12.5px}
+.rec p{font-size:14.5px;color:var(--steel);margin:6px 0 0}
+
+/* ---- Quiz ---- */
+.quiz-q{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:20px;margin-bottom:18px}
+.quiz-q legend{font-weight:700;font-size:15.5px;padding:0 4px}
+.quiz-q fieldset{border:none}
+.quiz-opt{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:6px;cursor:pointer;font-size:14.5px}
+.quiz-opt:hover{background:var(--wash)}
+.quiz-opt input{margin-top:4px;accent-color:var(--blue)}
+.quiz-fb{display:none;margin-top:10px;padding:10px 14px;border-radius:6px;font-size:14px;font-weight:500}
+.quiz-fb.ok{display:block;background:var(--green-wash);color:var(--green);border:1px solid var(--green)}
+.quiz-fb.no{display:block;background:var(--red-wash);color:var(--red);border:1px solid var(--red)}
+.btn{
+  display:inline-block;background:var(--blue-deep);color:#fff;border:none;border-radius:6px;
+  padding:11px 22px;font:inherit;font-weight:700;font-size:15px;cursor:pointer;text-decoration:none
+}
+.btn:hover{background:var(--blue);color:#fff}
+.btn.ghost{background:var(--panel);color:var(--blue-deep);border:1.5px solid var(--blue-deep)}
+.btn.ghost:hover{background:var(--wash)}
+.quiz-score{display:none;margin-top:8px}
+
+/* ---- Prev / next ---- */
+.pager{
+  display:flex;justify-content:space-between;gap:14px;border-top:1px solid var(--line);
+  margin-top:44px;padding:22px 0 8px
+}
+.pager a{
+  text-decoration:none;border:1px solid var(--line);border-radius:8px;padding:12px 18px;
+  background:var(--panel);max-width:46%;color:var(--ink)
+}
+.pager a:hover{border-color:var(--blue)}
+.pager .dir{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--steel);display:block}
+.pager .ttl{font-weight:700;font-size:14.5px;color:var(--blue-deep)}
+.pager .next{margin-left:auto;text-align:right}
+
+.to-top{
+  position:fixed;right:22px;bottom:22px;background:var(--blue-deep);color:#fff;border:none;
+  border-radius:50%;width:44px;height:44px;font-size:19px;cursor:pointer;display:none;
+  align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(22,53,79,.3);z-index:90
+}
+.to-top.show{display:flex}
+
+footer.site-footer{
+  border-top:1px solid var(--line);padding:22px 34px 30px;font-size:13px;color:var(--steel);
+  max-width:880px;margin:0 auto
+}
+footer.site-footer p{margin-bottom:4px}
+
+/* ---- Responsive ---- */
+@media (max-width:960px){
+  .shell{grid-template-columns:1fr}
+  .sidebar{
+    position:fixed;left:0;top:0;bottom:0;width:290px;z-index:160;height:100vh;
+    transform:translateX(-100%);transition:transform .22s ease;box-shadow:0 0 30px rgba(0,0,0,.15)
+  }
+  .sidebar.open{transform:translateX(0)}
+  .menu-btn{display:inline-block}
+  .topbar{padding:12px 18px}
+  .page{padding:30px 18px 20px}
+  .page h2{font-size:27px}
+  .card-grid{grid-template-columns:1fr}
+  .rec{grid-template-columns:44px 1fr}
+  footer.site-footer{padding:20px 18px 28px}
+  .step-count{display:none}
+}
+.overlay{display:none;position:fixed;inset:0;background:rgba(20,32,44,.45);z-index:155}
+.overlay.show{display:block}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<div class="read-progress" id="readProgress" aria-hidden="true"></div>
+<div class="doc-banner">Meridian Defense Systems Intranet&nbsp;// <strong>Management Tutorial</strong>&nbsp;// Unclassified — Training Material</div>
+<div class="shell">
+
+<!-- ================= SIDEBAR ================= -->
+<aside class="sidebar" id="sidebar" aria-label="Tutorial navigation">
+  <div class="brand">
+    <div class="org">ISSC698 · Capstone Tutorial</div>
+    <h1>Securing VPN &amp; APN Access in the Defense Industrial Base</h1>
+    <div class="sub">A tutorial for Meridian management</div>
+  </div>
+  <nav class="tutorial-nav" aria-label="Tutorial sections">
+    <div class="nav-group">
+      <div class="nav-group-label">Orientation</div>
+      <a class="nav-link" href="#home" data-page-link="home"><span class="nav-dot" aria-hidden="true"></span>Home</a>
+      <a class="nav-link" href="#background" data-page-link="background"><span class="nav-dot" aria-hidden="true"></span>Background &amp; Scenario</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-label">Cybersecurity Domains</div>
+      <a class="nav-link" href="#domain-network" data-page-link="domain-network"><span class="nav-dot" aria-hidden="true"></span>Communications &amp; Networking</a>
+      <a class="nav-link" href="#domain-identity" data-page-link="domain-identity"><span class="nav-dot" aria-hidden="true"></span>Access &amp; Identity</a>
+      <a class="nav-link" href="#domain-secops" data-page-link="domain-secops"><span class="nav-dot" aria-hidden="true"></span>Security Operations</a>
+      <a class="nav-link" href="#domain-compliance" data-page-link="domain-compliance"><span class="nav-dot" aria-hidden="true"></span>Laws, Regulations &amp; Compliance</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-label">Assessment &amp; Action</div>
+      <a class="nav-link" href="#risk" data-page-link="risk"><span class="nav-dot" aria-hidden="true"></span>Risk Assessment</a>
+      <a class="nav-link" href="#recommendations" data-page-link="recommendations"><span class="nav-dot" aria-hidden="true"></span>Recommendations</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-label">Wrap-Up</div>
+      <a class="nav-link" href="#quiz" data-page-link="quiz"><span class="nav-dot" aria-hidden="true"></span>Knowledge Check</a>
+      <a class="nav-link" href="#references" data-page-link="references"><span class="nav-dot" aria-hidden="true"></span>References &amp; Resources</a>
+    </div>
+  </nav>
+  <div class="nav-progress">
+    <span id="visitedLabel">0 of 10 sections visited</span>
+    <div class="bar"><div class="fill" id="visitedFill"></div></div>
+  </div>
+</aside>
+<div class="overlay" id="overlay"></div>
+
+<!-- ================= MAIN ================= -->
+<div>
+  <div class="topbar">
+    <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="sidebar">☰ Menu</button>
+    <div class="crumbs" id="crumbs" aria-live="polite">Home</div>
+    <div class="step-count" id="stepCount">Section 1 of 10</div>
+  </div>
+
+  <main id="main-content">
+
+  <!-- ============ HOME ============ -->
+  <section class="page" data-page="home" data-title="Home" data-group="Orientation">
+    <div class="eyebrow">Management tutorial · Start here</div>
+    <h2>Two doors into the company. Both face the open internet.</h2>
+    <p class="lede">Nearly all of Meridian Defense Systems' sensitive traffic travels through a remote-access VPN and a carrier-provided APN. This tutorial explains, in management terms, what those two systems are, why adversaries target them, and the seven actions that would close the gaps — no knowledge of IPsec key exchange required.</p>
+
+    <div class="stat-row">
+      <div class="stat"><div class="num">$11.5M</div><div class="lbl">Average cost of a U.S. data breach (IBM, 2026)</div></div>
+      <div class="stat"><div class="num">247 days</div><div class="lbl">Average time to identify and contain a breach (IBM, 2026)</div></div>
+      <div class="stat"><div class="num">800</div><div class="lbl">Meridian employees who connect from outside a company building</div></div>
+      <div class="stat"><div class="num">110</div><div class="lbl">SPRS score required for final CMMC Level 2 status</div></div>
+    </div>
+
+    <h3>How to use this tutorial</h3>
+    <p>Work through the sections in order using the <strong>Continue</strong> button at the bottom of each page, or jump directly to any section from the navigation menu. Green dots mark the sections you have already visited, and the progress bar at the top of the screen tracks your position on each page. The tutorial ends with a short knowledge check.</p>
+
+    <h3>The four domains covered</h3>
+    <p>The material is organized by the four cybersecurity domains that govern VPN and APN risk at Meridian:</p>
+    <div class="card-grid">
+      <a class="card" href="#domain-network">
+        <span class="dnum">Domain 1</span>
+        <h4>Communications &amp; Networking Security</h4>
+        <p>How internet-facing VPN appliances are found and exploited, and what the 2026 Cisco and Check Point campaigns teach us.</p>
+      </a>
+      <a class="card" href="#domain-identity">
+        <span class="dnum">Domain 2</span>
+        <h4>Access &amp; Identity Management</h4>
+        <p>Why a stolen password looks legitimate to a VPN, and how certificates and phishing-resistant MFA change that.</p>
+      </a>
+      <a class="card" href="#domain-secops">
+        <span class="dnum">Domain 3</span>
+        <h4>Security Operations</h4>
+        <p>Why breaches go unnoticed for 247 days on average, and where Meridian's early-warning data already lives.</p>
+      </a>
+      <a class="card" href="#domain-compliance">
+        <span class="dnum">Domain 4</span>
+        <h4>Laws, Regulations &amp; Compliance</h4>
+        <p>What the CMMC Phase 2 suspension does and does not change, and the SPRS scoring rule that catches budgets off guard.</p>
+      </a>
+    </div>
+
+    <div class="callout gold">
+      <span class="tag">The four questions this tutorial answers</span>
+      <p>Leadership does not need to understand APN routing tables. It needs verifiable answers to four questions: How quickly do we patch internet-facing devices, and on what risk basis? What proves the identity of someone connecting to our network? Where does field mobile traffic actually go? Would we know within a week if any of it were being abused?</p>
+    </div>
+    <p style="margin-top:26px"><a class="btn" href="#background">Start the tutorial →</a></p>
+  </section>
+
+  <!-- ============ BACKGROUND ============ -->
+  <section class="page" data-page="background" data-title="Background &amp; Scenario" data-group="Orientation">
+    <div class="eyebrow">Orientation · Section 2</div>
+    <h2>Background &amp; Scenario</h2>
+    <p class="lede">Who Meridian is, why its remote-access architecture deserves executive attention rather than delegation, and how a decade of technology and regulation led here.</p>
+
+    <h3>The company and the two paths</h3>
+    <p>Meridian Defense Systems is a prime contractor of roughly 2,000 employees supporting Department of Defense programs involving Controlled Unclassified Information (CUI). About <strong>600 engineers</strong> work remotely through a commercial VPN appliance, and <strong>200 field personnel</strong> carry government-furnished devices that reach the corporate network through a carrier-provided Access Point Name (APN). Between them, those two paths carry nearly all of the company's sensitive traffic — and neither runs through a building Meridian owns.</p>
+    <div class="callout">
+      <span class="tag">Plain-language definitions</span>
+      <p><strong>VPN (Virtual Private Network):</strong> an encrypted tunnel that lets a remote employee reach internal systems as if they were in the office. The gateway must be reachable from the open internet to work — which means attackers can reach it too.</p>
+      <p><strong>APN (Access Point Name):</strong> the gateway a mobile device uses to move from the cellular carrier's network into a company's network. It must accept connections from devices moving through territory the company does not control.</p>
+    </div>
+    <p>Both systems are <em>exposed by design</em>, and both tend to be configured once during deployment and inherited unreviewed thereafter. This arrangement is unremarkable across the defense industrial base — which is exactly why it deserves executive attention.</p>
+
+    <h3>Who has a stake</h3>
+    <ul>
+      <li><strong>Program managers</strong> lose schedule when systems go offline for forensics.</li>
+      <li><strong>The contracts organization</strong> carries eligibility risk: a reportable incident or lapsed affirmation affects award standing.</li>
+      <li><strong>Government program offices</strong> depend on the confidentiality of information Meridian holds on their behalf.</li>
+      <li><strong>The warfighter</strong> relying on these programs bears the operational consequence.</li>
+    </ul>
+
+    <h3>How we got here</h3>
+    <ol class="timeline">
+      <li><span class="t-date">1990s</span><span class="t-title">IPsec standardized</span><p>Developed through the IETF, IPsec becomes the standard mechanism for carrying protected traffic across untrusted networks.</p></li>
+      <li><span class="t-date">2016</span><span class="t-title">DFARS 252.204-7012 takes effect</span><p>Safeguarding covered defense information and cyber-incident reporting become contract conditions.</p></li>
+      <li><span class="t-date">2020</span><span class="t-title">NIST consolidates guidance; remote work surges</span><p>SP 800-77 Rev. 1 (IPsec VPNs) and SP 800-207 (Zero Trust Architecture) publish as the pandemic drives a sustained rise in VPN-targeted attacks.</p></li>
+      <li><span class="t-date">2024</span><span class="t-title">CMMC program rule finalized</span><p>The CMMC program takes effect under 32 CFR Part 170.</p></li>
+      <li><span class="t-date">Nov 2025</span><span class="t-title">CMMC becomes a condition of award</span><p>DFARS 252.204-7021 makes CMMC certification a condition of award for covered contracts.</p></li>
+      <li><span class="t-date">Jul 13, 2026</span><span class="t-title">CMMC Phase 2 suspended</span><p>The Department of War freezes third-party certification requirements scheduled for November 2026, pending a reform review.</p></li>
+    </ol>
+
+    <div class="callout red">
+      <span class="tag">The management decision</span>
+      <p>The compliance ceiling dropped in July 2026. The threat did not. Meridian can read the CMMC pause as permission to slow down — or as an opportunity to close gaps on its own schedule. This tutorial recommends the second option.</p>
+    </div>
+
+    <div class="pager"></div>
+  </section>
+
+  <!-- ============ DOMAIN 1 ============ -->
+  <section class="page" data-page="domain-network" data-title="Communications &amp; Networking" data-group="Cybersecurity Domains">
+    <div class="eyebrow">Domain 1 of 4 · Section 3</div>
+    <h2>Communications &amp; Networking Security</h2>
+    <p class="lede">Internet-facing network gear was the most actively attacked category of infrastructure across the federal landscape in the past year. Two 2026 campaigns show exactly how it happens.</p>
+
+    <h3>What happened in 2026</h3>
+    <p>In February 2026, CISA issued <strong>Emergency Directive 26-03</strong>, requiring federal agencies to inventory, patch, and assess for compromise across Cisco Software-Defined Wide Area Network (SD-WAN) systems after observing active exploitation. Four related vulnerabilities entered the Known Exploited Vulnerabilities (KEV) catalog between February and May (CISA, 2026a).</p>
+    <p>In June, Check Point disclosed <strong>CVE-2026-50751</strong>, a CVSS 9.3 flaw in certificate validation during IKEv1 key exchange that allowed an unauthenticated attacker to establish a remote-access VPN session <em>without valid credentials</em>. CISA added it to the KEV catalog on June 8. Exploitation had been underway since early May, and at least one incident involved a Qilin ransomware affiliate (Rapid7, 2026).</p>
+
+    <h3>The mechanism, step by step</h3>
+    <p>Understanding this chain is what justifies the patching recommendation later in this tutorial:</p>
+    <ol class="chain">
+      <li><strong>The VPN concentrator listens on a public address.</strong><span>It has to — that is how remote employees reach it.</span></li>
+      <li><strong>A vulnerability is disclosed.</strong><span>Proof-of-concept exploit code circulates within days.</span></li>
+      <li><strong>Automated scanning locates every unpatched instance.</strong><span>Meridian's included — without anyone having targeted the company specifically.</span></li>
+      <li><strong>The attacker establishes a session as a trusted remote user.</strong><span>Further post-authentication activity is required to reach internal resources, but the perimeter has been crossed without a credential.</span></li>
+    </ol>
+
+    <div class="callout green">
+      <span class="tag">The encouraging finding</span>
+      <p>A systematic review of the post-pandemic VPN landscape concluded that the primary weaknesses are <strong>weak configuration and implementation</strong>, not inherent protocol flaws (Qollakaj et al., 2025). That argues for disciplined configuration and patch governance ahead of expensive architectural replacement.</p>
+    </div>
+
+    <h3>Go deeper</h3>
+    <ul>
+      <li><a class="ext" href="https://www.cisa.gov/news-events/alerts/2026/02/25/cisa-and-partners-release-guidance-ongoing-global-exploitation-cisco-sd-wan-systems" target="_blank" rel="noopener">CISA guidance on the global exploitation of Cisco SD-WAN systems</a></li>
+      <li><a class="ext" href="https://www.rapid7.com/blog/post/etr-critical-check-point-vpn-zero-day-exploited-in-the-wild-cve-2026-50751/" target="_blank" rel="noopener">Rapid7 analysis of the Check Point VPN zero-day (CVE-2026-50751)</a></li>
+      <li><a class="ext" href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA Known Exploited Vulnerabilities (KEV) catalog</a></li>
+      <li><a class="ext" href="https://doi.org/10.6028/NIST.SP.800-77r1" target="_blank" rel="noopener">NIST SP 800-77 Rev. 1 — Guide to IPsec VPNs</a></li>
+    </ul>
+    <div class="pager"></div>
+  </section>
+
+  <!-- ============ DOMAIN 2 ============ -->
+  <section class="page" data-page="domain-identity" data-title="Access &amp; Identity" data-group="Cybersecurity Domains">
+    <div class="eyebrow">Domain 2 of 4 · Section 4</div>
+    <h2>Access &amp; Identity Management</h2>
+    <p class="lede">A VPN that authenticates with a password treats a stolen password as a legitimate employee. Identity is where most intrusions actually begin.</p>
+
+    <h3>The problem</h3>
+    <p>Phishing remained the most common initial access vector for the <strong>fourth consecutive year</strong> (IBM, 2026). A VPN authenticating by password or pre-shared key has no way to distinguish the real employee from an attacker who harvested that credential through a phishing page. To the appliance, both sessions are identical.</p>
+
+    <h3>What the vendors themselves concluded</h3>
+    <p>Check Point's own mitigation for CVE-2026-50751 is instructive: the fix was to make <strong>machine-certificate authentication mandatory</strong>, because the flaw affected deployments that did not require it. The vendor's answer was <em>more</em> certificate enforcement, not less — though the device enforcing authentication still has to be patched, which is why Domains 1 and 2 work together.</p>
+
+    <div class="callout">
+      <span class="tag">Plain-language definition</span>
+      <p><strong>Phishing-resistant MFA:</strong> multi-factor authentication that cannot be satisfied by tricking a user into typing a code into a fake page — for example, hardware-bound certificates or PIV smart cards. A push notification or SMS code can be phished; a certificate bound to a managed device cannot be typed into anything.</p>
+    </div>
+
+    <h3>What this means for Meridian</h3>
+    <ul>
+      <li>Retire pre-shared keys and password-only VPN authentication.</li>
+      <li>Move to certificate- and PIV-based authentication with phishing-resistant MFA (Recommendation 2 in this tutorial).</li>
+      <li>Treat identity as the control that keeps a phished employee from becoming a network intrusion.</li>
+    </ul>
+
+    <h3>Go deeper</h3>
+    <ul>
+      <li><a class="ext" href="https://www.ibm.com/reports/data-breach" target="_blank" rel="noopener">IBM Cost of a Data Breach Report 2026</a></li>
+      <li><a class="ext" href="https://doi.org/10.6028/NIST.SP.800-77r1" target="_blank" rel="noopener">NIST SP 800-77 Rev. 1 — authentication guidance for IPsec VPNs</a></li>
+    </ul>
+    <div class="pager"></div>
+  </section>
+
+  <!-- ============ DOMAIN 3 ============ -->
+  <section class="page" data-page="domain-secops" data-title="Security Operations" data-group="Cybersecurity Domains">
+    <div class="eyebrow">Domain 3 of 4 · Section 5</div>
+    <h2>Security Operations</h2>
+    <p class="lede">The average breach goes 247 days before it is identified and contained. The data that would catch it earlier already exists at Meridian — it is just sitting in the wrong place.</p>
+
+    <h3>The detection gap, in dollars</h3>
+    <div class="stat-row">
+      <div class="stat"><div class="num">247 days</div><div class="lbl">Average time to identify and contain a breach (IBM, 2026)</div></div>
+      <div class="stat"><div class="num">$5.65M</div><div class="lbl">Average cost when an incident exceeds 200 days (global)</div></div>
+      <div class="stat"><div class="num">$4.32M</div><div class="lbl">Average cost when resolved faster than 200 days (global)</div></div>
+    </div>
+    <p>Time is the multiplier. Incidents that run past 200 days cost, on average, well over a million dollars more than those caught sooner — before considering the U.S. average breach cost of $11.5 million (IBM, 2026).</p>
+
+    <h3>Where Meridian's early warning already lives</h3>
+    <p>VPN and APN session data — who connected, from where, when, and how much data moved — would surface an anomaly early. Yet this data is routinely left on the appliance itself rather than centralized where analysts and alerting tools can see it. An attacker who compromises the appliance can then also tamper with the only copy of the evidence.</p>
+    <div class="callout gold">
+      <span class="tag">The operational change</span>
+      <p>Centralize VPN and APN session logging and add anomaly alerting (Recommendation 4). This is a moderate investment that directly attacks the 247-day problem: you cannot respond to what you cannot see.</p>
+    </div>
+
+    <h3>Go deeper</h3>
+    <ul>
+      <li><a class="ext" href="https://www.ibm.com/reports/data-breach" target="_blank" rel="noopener">IBM Cost of a Data Breach Report 2026</a></li>
+      <li><a class="ext" href="https://doi.org/10.6028/NIST.CSWP.29" target="_blank" rel="noopener">NIST Cybersecurity Framework 2.0 — the Detect function</a></li>
+    </ul>
+    <div class="pager"></div>
+  </section>
+
+  <!-- ============ DOMAIN 4 ============ -->
+  <section class="page" data-page="domain-compliance" data-title="Laws, Regulations &amp; Compliance" data-group="Cybersecurity Domains">
+    <div class="eyebrow">Domain 4 of 4 · Section 6</div>
+    <h2>Laws, Regulations &amp; Compliance</h2>
+    <p class="lede">The CMMC Phase 2 suspension changed Meridian's regulatory calendar — not its obligations. Sorting what is binding, what is paused, and what is voluntary prevents both overspending and false comfort.</p>
+
+    <h3>The July 2026 pause</h3>
+    <p>On July 13, 2026, the Department of War suspended CMMC Phase 2, freezing third-party certification requirements scheduled for contracts on November 10, 2026 (DefenseScoop, 2026). Department CIO Kirsten Davies cited Small Business Administration estimates that later CMMC phases could cost small and mid-sized firms more than $7 billion annually, with over 100,000 companies requiring assessment from roughly 100 authorized organizations. The pause is pending a Reform Task Force review due in mid-September 2026.</p>
+    <p>Critically, the suspension came by <strong>memorandum, not regulation</strong> — it is restorable as quickly as it was withdrawn (Eyre &amp; Zhou, 2026).</p>
+
+    <h3>Three buckets of obligation</h3>
+    <div class="table-wrap"><table>
+      <caption class="sr-only">Meridian's compliance obligations grouped by current status</caption>
+      <thead><tr><th scope="col">Status</th><th scope="col">What falls in it</th><th scope="col">Management takeaway</th></tr></thead>
+      <tbody>
+        <tr><td><span class="chip crit">Binding today</span></td><td>DFARS 252.204-7012 · NIST SP 800-171 Rev. 2 implementation · current SPRS score · annual verification</td><td>Nothing here paused. Primes may also impose stricter terms on subcontractors regardless of the pause.</td></tr>
+        <tr><td><span class="chip high">Suspended, not eliminated</span></td><td>Third-party certification at CMMC Level 2</td><td>Paused by memorandum; plan as if it returns.</td></tr>
+        <tr><td><span class="chip mod">Authoritative but voluntary</span></td><td>NIST SP 800-77 Rev. 1 · SP 800-124 Rev. 2 · SP 800-207 (Zero Trust)</td><td>The benchmarks assessors and insurers reference.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>The SPRS scoring rule that catches budgets off guard</h3>
+    <div class="callout red">
+      <span class="tag">Frequently misstated — with budget consequences</span>
+      <p>Final CMMC Level 2 status requires a MET result on <strong>all 110 requirements</strong> — a perfect SPRS score of 110. A score of 88 or above earns only <em>Conditional</em> Level 2 status, and only when every unmet requirement is documented in a Plan of Action and Milestones (POA&amp;M) and none appears among the requirements that cannot be deferred under 32 CFR 170.21(a)(2)(iii). Conditional status starts a <strong>180-day clock</strong>; failure to close the POA&amp;M causes the status to expire. Budgeting to a score of 88 as though it were compliance would be a mistake.</p>
+    </div>
+
+    <h3>Why these frameworks and not others</h3>
+    <p>ISO/IEC 27001 offers a mature management system but carries no weight with a DoD contracting officer. COBIT addresses network security too generally to drive configuration decisions. The CIS Controls are practical but not referenced in DFARS clauses. <strong>NIST CSF 2.0</strong> was selected for governance because its Govern function locates risk decisions with senior leadership rather than the IT department (NIST, 2024), and <strong>SP 800-30 Rev. 1</strong> supplies the risk methodology used in the next section. CMMC and its SP 800-171 baseline are not optional for a defense contractor.</p>
+
+    <h3>Go deeper</h3>
+    <ul>
+      <li><a class="ext" href="https://defensescoop.com/2026/07/13/dod-halts-cmmc-cybersecurity-requirements-phase-2/" target="_blank" rel="noopener">DefenseScoop — DOD halts cybersecurity requirements for CMMC Phase 2</a></li>
+      <li><a class="ext" href="https://www.governmentcontractslegalforum.com/2026/07/articles/cybersecurity/department-of-war-immediately-suspends-cmmc-phase-ii-requirements-launches-60-day-reform-review/" target="_blank" rel="noopener">Government Contracts Legal Forum — analysis of the Phase 2 suspension</a></li>
+      <li><a class="ext" href="https://doi.org/10.6028/NIST.CSWP.29" target="_blank" rel="noopener">NIST Cybersecurity Framework (CSF) 2.0</a></li>
+    </ul>
+    <div class="pager"></div>
+  </section>
+  <!-- ============ RISK ============ -->
+  <section class="page" data-page="risk" data-title="Risk Assessment" data-group="Assessment &amp; Action">
+    <div class="eyebrow">Assessment · Section 7</div>
+    <h2>Risk Assessment</h2>
+    <p class="lede">Seven risks, scored with the qualitative likelihood-by-impact approach in NIST SP 800-30 Rev. 1. Select any risk on the heat map to highlight its entry in the register below.</p>
+
+    <h3>Methodology in one paragraph</h3>
+    <p><strong>Likelihood</strong> reflects observed frequency in federal breach and directive reporting over the past twelve months. <strong>Impact</strong> reflects the combined operational, contractual, and financial consequence to Meridian. The composite rating is the intersection of the two on a three-by-three matrix (NIST, 2012). Ratings should be re-scored after any material change to the network architecture.</p>
+
+    <h3>Interactive heat map</h3>
+    <div class="heatmap-wrap">
+      <div class="heatmap" role="group" aria-label="Risk heat map: likelihood by impact">
+        <div class="hm-corner">Likelihood ↓ / Impact →</div>
+        <div class="hm-axis">Moderate impact</div>
+        <div class="hm-axis">High impact</div>
+        <div class="hm-axis">Severe impact</div>
+
+        <div class="hm-axis">High likelihood</div>
+        <div class="hm-cell hm-mod"><span class="cell-tag">Moderate</span></div>
+        <div class="hm-cell hm-high"><span class="cell-tag">High</span></div>
+        <div class="hm-cell hm-crit"><span class="cell-tag">Critical</span>
+          <button class="risk-chip" data-risk="R1" aria-pressed="false">R1</button>
+          <button class="risk-chip" data-risk="R2" aria-pressed="false">R2</button>
+        </div>
+
+        <div class="hm-axis">Moderate likelihood</div>
+        <div class="hm-cell hm-mod"><span class="cell-tag">Moderate</span></div>
+        <div class="hm-cell hm-mod"><span class="cell-tag">Moderate</span>
+          <button class="risk-chip" data-risk="R4" aria-pressed="false">R4</button>
+        </div>
+        <div class="hm-cell hm-high"><span class="cell-tag">High</span>
+          <button class="risk-chip" data-risk="R3" aria-pressed="false">R3</button>
+          <button class="risk-chip" data-risk="R5" aria-pressed="false">R5</button>
+          <button class="risk-chip" data-risk="R6" aria-pressed="false">R6</button>
+        </div>
+
+        <div class="hm-axis">Low likelihood</div>
+        <div class="hm-cell hm-mod"><span class="cell-tag">Low</span></div>
+        <div class="hm-cell hm-mod"><span class="cell-tag">Moderate</span></div>
+        <div class="hm-cell hm-mod"><span class="cell-tag">Moderate</span>
+          <button class="risk-chip" data-risk="R7" aria-pressed="false">R7</button>
+        </div>
+      </div>
+      <p class="hm-hint" id="hmHint">Select a risk (R1–R7) above to highlight it in the register.</p>
+    </div>
+
+    <h3>Risk register</h3>
+    <div class="table-wrap"><table id="riskTable">
+      <thead><tr><th scope="col">ID</th><th scope="col">Risk event</th><th scope="col">Likelihood</th><th scope="col">Impact</th><th scope="col">Rating</th><th scope="col">Addressed by rec.</th></tr></thead>
+      <tbody>
+        <tr data-risk="R1"><td>R1</td><td>Unpatched internet-facing VPN appliance exploited via known CVE</td><td>High</td><td>Severe</td><td><span class="chip crit">Critical</span></td><td>1</td></tr>
+        <tr data-risk="R2"><td>R2</td><td>Credential theft enabling authenticated VPN access</td><td>High</td><td>Severe</td><td><span class="chip crit">Critical</span></td><td>2</td></tr>
+        <tr data-risk="R3"><td>R3</td><td>CUI transmitted outside the encrypted tunnel via split tunneling</td><td>Moderate</td><td>Severe</td><td><span class="chip high">High</span></td><td>3</td></tr>
+        <tr data-risk="R5"><td>R5</td><td>Intrusion undetected beyond 200 days</td><td>Moderate</td><td>Severe</td><td><span class="chip high">High</span></td><td>4</td></tr>
+        <tr data-risk="R6"><td>R6</td><td>Lateral movement following initial remote-access compromise</td><td>Moderate</td><td>Severe</td><td><span class="chip high">High</span></td><td>7</td></tr>
+        <tr data-risk="R7"><td>R7</td><td>Loss of contract eligibility following lapsed SPRS affirmation</td><td>Low</td><td>Severe</td><td><span class="chip mod">Moderate</span></td><td>5</td></tr>
+        <tr data-risk="R4"><td>R4</td><td>Government-furnished device on public or misconfigured APN</td><td>Moderate</td><td>High</td><td><span class="chip mod">Moderate</span></td><td>6</td></tr>
+      </tbody>
+    </table></div>
+    <p><em>Note.</em> Risks are listed by composite rating. R6 is addressed last despite its High rating because a zero-trust transition is a multi-year program; the deferral reflects implementation timeline, not a lower assessment of the risk. Scoring is qualitative and reflects the hypothetical Meridian environment.</p>
+    <div class="pager"></div>
+  </section>
+
+  <!-- ============ RECOMMENDATIONS ============ -->
+  <section class="page" data-page="recommendations" data-title="Recommendations" data-group="Assessment &amp; Action">
+    <div class="eyebrow">Action plan · Section 8</div>
+    <h2>Seven Ranked Recommendations</h2>
+    <p class="lede">Sequenced by composite risk rating, then by cost and effort within each band. Items 1–3 are policy and configuration changes that address the failure modes appearing most often in federal breach reporting.</p>
+
+    <div class="rec"><div class="rank">1</div><div>
+      <h4>Risk-tiered remediation standard for KEV-listed vulnerabilities</h4>
+      <p>Three-day window for publicly exposed, automatable flaws. Addresses R1 (unpatched VPN appliance).</p>
+      <div class="meta"><span class="chip low-cost">Low investment</span><span class="chip mod">BOD 26-04 model · SP 800-171 3.14.1</span></div>
+    </div></div>
+    <div class="rec"><div class="rank">2</div><div>
+      <h4>Certificate- and PIV-based authentication with phishing-resistant MFA</h4>
+      <p>Retire pre-shared keys. Addresses R2 (credential theft).</p>
+      <div class="meta"><span class="chip mod">Moderate investment</span><span class="chip mod">SP 800-171 IA · SP 800-77</span></div>
+    </div></div>
+    <div class="rec"><div class="rank">3</div><div>
+      <h4>Default-deny split tunneling with documented exception approval</h4>
+      <p>Keeps CUI inside the encrypted tunnel. Addresses R3.</p>
+      <div class="meta"><span class="chip low-cost">Low investment</span><span class="chip mod">SP 800-77 · CSF 2.0 Protect</span></div>
+    </div></div>
+    <div class="rec"><div class="rank">4</div><div>
+      <h4>Centralized VPN and APN session logging with anomaly alerting</h4>
+      <p>Attacks the 247-day detection gap. Addresses R5.</p>
+      <div class="meta"><span class="chip mod">Moderate investment</span><span class="chip mod">CSF 2.0 Detect</span></div>
+    </div></div>
+    <div class="rec"><div class="rank">5</div><div>
+      <h4>Quarterly review of SPRS score and affirmation status</h4>
+      <p>Owned by the contracts organization. Addresses R7 (contract eligibility).</p>
+      <div class="meta"><span class="chip low-cost">Low investment</span><span class="chip mod">CSF 2.0 Govern</span></div>
+    </div></div>
+    <div class="rec"><div class="rank">6</div><div>
+      <h4>Private APN with enforced MDM enrollment for government-furnished devices</h4>
+      <p>Controls where field mobile traffic actually goes. Addresses R4.</p>
+      <div class="meta"><span class="chip mod">Moderate investment</span><span class="chip mod">SP 800-124 Rev. 2</span></div>
+    </div></div>
+    <div class="rec"><div class="rank">7</div><div>
+      <h4>Phased ZTNA pilot scoped to the highest-sensitivity enclave</h4>
+      <p>Begins the multi-year zero-trust transition. Addresses R6 (lateral movement).</p>
+      <div class="meta"><span class="chip high">High investment</span><span class="chip mod">SP 800-207</span></div>
+    </div></div>
+
+    <h3>Why a tiered patching standard (Recommendation 1)</h3>
+    <p>On June 10, 2026, CISA issued <strong>Binding Operational Directive 26-04</strong>, superseding BOD 22-01 and replacing its flat KEV deadline with a tiered model that scores each vulnerability against asset exposure, KEV status, exploit automation, and post-exploitation impact — producing remediation windows from three days to the next scheduled upgrade (CISA, 2026b). Such directives bind federal civilian agencies, not the defense industrial base. But it is the benchmark assessors and insurers will reference, and a flat rule is exactly the undifferentiated approach CISA has moved away from.</p>
+
+    <div class="callout green">
+      <span class="tag">The cost argument</span>
+      <p>The moderate investments above carry real expense — and remain a small fraction of the $11.5 million average breach cost at a U.S. organization (IBM, 2026). Recommendations 1–3 are largely policy and configuration, not capital projects.</p>
+    </div>
+
+    <h3>Go deeper</h3>
+    <ul>
+      <li><a class="ext" href="https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk" target="_blank" rel="noopener">CISA Binding Operational Directive 26-04</a></li>
+      <li><a class="ext" href="https://doi.org/10.6028/NIST.SP.800-207" target="_blank" rel="noopener">NIST SP 800-207 — Zero Trust Architecture</a></li>
+      <li><a class="ext" href="https://doi.org/10.6028/NIST.SP.800-124r2" target="_blank" rel="noopener">NIST SP 800-124 Rev. 2 — Managing mobile device security</a></li>
+    </ul>
+    <div class="pager"></div>
+  </section>
+
+  <!-- ============ QUIZ ============ -->
+  <section class="page" data-page="quiz" data-title="Knowledge Check" data-group="Wrap-Up">
+    <div class="eyebrow">Wrap-up · Section 9</div>
+    <h2>Knowledge Check</h2>
+    <p class="lede">Five questions covering the key management takeaways. Answers are checked instantly — you can retake the check as many times as you like.</p>
+    <form id="quizForm" novalidate>
+      <div class="quiz-q"><fieldset>
+        <legend>1. Why must a VPN gateway be reachable from the open internet?</legend>
+        <label class="quiz-opt"><input type="radio" name="q1" value="a"> Because IT misconfigured it</label>
+        <label class="quiz-opt"><input type="radio" name="q1" value="b" data-correct> Because remote employees could not reach it otherwise — exposure is inherent to its function</label>
+        <label class="quiz-opt"><input type="radio" name="q1" value="c"> Because CMMC requires it</label>
+        <div class="quiz-fb" data-ok="Correct. VPN gateways and APNs are exposed by design — which is why their configuration and patching deserve standing attention." data-no="Not quite. The gateway must listen on a public address so remote employees can reach it. Exposure is inherent to its function."></div>
+      </fieldset></div>
+      <div class="quiz-q"><fieldset>
+        <legend>2. What SPRS score is required for final (not conditional) CMMC Level 2 status?</legend>
+        <label class="quiz-opt"><input type="radio" name="q2" value="a"> 88</label>
+        <label class="quiz-opt"><input type="radio" name="q2" value="b"> 100</label>
+        <label class="quiz-opt"><input type="radio" name="q2" value="c" data-correct> 110 — a perfect score; 88 earns only conditional status with a 180-day clock</label>
+        <div class="quiz-fb" data-ok="Correct. Budgeting to 88 as though it were compliance would be a mistake." data-no="Not quite. Final Level 2 requires all 110 requirements MET. A score of 88+ earns only conditional status, which expires if the POA&M is not closed within 180 days."></div>
+      </fieldset></div>
+      <div class="quiz-q"><fieldset>
+        <legend>3. What did the July 13, 2026 CMMC action actually suspend?</legend>
+        <label class="quiz-opt"><input type="radio" name="q3" value="a"> All DoD cybersecurity requirements for contractors</label>
+        <label class="quiz-opt"><input type="radio" name="q3" value="b" data-correct> Phase 2 third-party certification only — DFARS 252.204-7012 and SP 800-171 remain binding</label>
+        <label class="quiz-opt"><input type="radio" name="q3" value="c"> The NIST Cybersecurity Framework</label>
+        <div class="quiz-fb" data-ok="Correct. The pause came by memorandum, not regulation, and is restorable as quickly as it was withdrawn." data-no="Not quite. Only Phase 2 third-party certification was paused. Everything beneath it — DFARS 7012, SP 800-171, SPRS scoring, annual affirmation — remains in force."></div>
+      </fieldset></div>
+      <div class="quiz-q"><fieldset>
+        <legend>4. Why is centralizing VPN/APN session logs worth a moderate investment?</legend>
+        <label class="quiz-opt"><input type="radio" name="q4" value="a" data-correct> Breaches average 247 days to identify and contain, and incidents past 200 days cost significantly more</label>
+        <label class="quiz-opt"><input type="radio" name="q4" value="b"> Logs are required to renew the VPN license</label>
+        <label class="quiz-opt"><input type="radio" name="q4" value="c"> It reduces bandwidth costs</label>
+        <div class="quiz-fb" data-ok="Correct. Session data left on the appliance cannot alert anyone — and can be tampered with by whoever compromises the appliance." data-no="Not quite. The case is the detection gap: 247 days on average, with incidents past 200 days averaging $5.65M versus $4.32M (IBM, 2026)."></div>
+      </fieldset></div>
+      <div class="quiz-q"><fieldset>
+        <legend>5. R6 (lateral movement) is rated High. Why is it addressed last?</legend>
+        <label class="quiz-opt"><input type="radio" name="q5" value="a"> It is actually a low risk</label>
+        <label class="quiz-opt"><input type="radio" name="q5" value="b" data-correct> Its fix — a zero-trust transition — is a multi-year program; the deferral reflects timeline, not a lower assessment</label>
+        <label class="quiz-opt"><input type="radio" name="q5" value="c"> No framework addresses it</label>
+        <div class="quiz-fb" data-ok="Correct. Sequencing favors the fast, high-return fundamentals first while the ZTNA pilot begins the longer transition." data-no="Not quite. The rating stays High. The ranking reflects the multi-year implementation timeline of a zero-trust transition (SP 800-207)."></div>
+      </fieldset></div>
+      <p><button type="button" class="btn" id="gradeBtn">Check my answers</button>
+      <button type="button" class="btn ghost" id="resetBtn" style="display:none">Retake the check</button></p>
+      <div class="callout green quiz-score" id="scoreBox" role="status"><span class="tag">Your result</span><p id="scoreText"></p></div>
+    </form>
+    <div class="pager"></div>
+  </section>
+
+  <!-- ============ REFERENCES ============ -->
+  <section class="page" data-page="references" data-title="References &amp; Resources" data-group="Wrap-Up">
+    <div class="eyebrow">Wrap-up · Section 10</div>
+    <h2>References &amp; Resources</h2>
+    <p class="lede">Every source cited in this tutorial and in the underlying executive summary, with live links to the authoritative originals. External links open in a new tab (marked ↗).</p>
+    <h3>Government directives &amp; regulation</h3>
+    <ul>
+      <li>Cybersecurity and Infrastructure Security Agency. (2026a). <a class="ext" href="https://www.cisa.gov/news-events/alerts/2026/02/25/cisa-and-partners-release-guidance-ongoing-global-exploitation-cisco-sd-wan-systems" target="_blank" rel="noopener"><em>CISA and partners release guidance for ongoing global exploitation of Cisco SD-WAN systems</em></a>. U.S. Department of Homeland Security.</li>
+      <li>Cybersecurity and Infrastructure Security Agency. (2026b). <a class="ext" href="https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk" target="_blank" rel="noopener"><em>Binding Operational Directive 26-04: Prioritizing security updates based on risk</em></a>. U.S. Department of Homeland Security.</li>
+      <li>Cybersecurity Maturity Model Certification Program, 32 C.F.R. § 170 (2024).</li>
+      <li>Cybersecurity Maturity Model Certification Requirements, 48 C.F.R. § 252.204-7021 (2025).</li>
+      <li>Safeguarding Covered Defense Information and Cyber Incident Reporting, 48 C.F.R. § 252.204-7012 (2016).</li>
+    </ul>
+    <h3>NIST publications</h3>
+    <ul>
+      <li>National Institute of Standards and Technology. (2012). <a class="ext" href="https://doi.org/10.6028/NIST.SP.800-30r1" target="_blank" rel="noopener"><em>Guide for conducting risk assessments</em> (SP 800-30, Rev. 1)</a>.</li>
+      <li>National Institute of Standards and Technology. (2020a). <a class="ext" href="https://doi.org/10.6028/NIST.SP.800-77r1" target="_blank" rel="noopener"><em>Guide to IPsec VPNs</em> (SP 800-77, Rev. 1)</a>.</li>
+      <li>National Institute of Standards and Technology. (2020b). <a class="ext" href="https://doi.org/10.6028/NIST.SP.800-207" target="_blank" rel="noopener"><em>Zero trust architecture</em> (SP 800-207)</a>.</li>
+      <li>National Institute of Standards and Technology. (2023). <a class="ext" href="https://doi.org/10.6028/NIST.SP.800-124r2" target="_blank" rel="noopener"><em>Guidelines for managing the security of mobile devices in the enterprise</em> (SP 800-124, Rev. 2)</a>.</li>
+      <li>National Institute of Standards and Technology. (2024). <a class="ext" href="https://doi.org/10.6028/NIST.CSWP.29" target="_blank" rel="noopener"><em>The NIST cybersecurity framework (CSF) 2.0</em> (CSWP 29)</a>.</li>
+    </ul>
+    <h3>Industry reporting &amp; research</h3>
+    <ul>
+      <li>DefenseScoop. (2026, July 13). <a class="ext" href="https://defensescoop.com/2026/07/13/dod-halts-cmmc-cybersecurity-requirements-phase-2/" target="_blank" rel="noopener"><em>DOD halts cybersecurity requirements for CMMC Phase 2</em></a>.</li>
+      <li>Eyre, P. J., &amp; Zhou, M. Y. (2026, July 22). <a class="ext" href="https://www.governmentcontractslegalforum.com/2026/07/articles/cybersecurity/department-of-war-immediately-suspends-cmmc-phase-ii-requirements-launches-60-day-reform-review/" target="_blank" rel="noopener"><em>Department of War immediately suspends CMMC Phase II requirements, launches 60-day reform review</em></a>. Government Contracts Legal Forum.</li>
+      <li>IBM. (2026, July 29). <a class="ext" href="https://www.ibm.com/reports/data-breach" target="_blank" rel="noopener"><em>Cost of a data breach report 2026</em></a>. IBM Security.</li>
+      <li>Mushtaq, S., Mohsin, M., &amp; Mushtaq, M. M. (2025). <a class="ext" href="https://doi.org/10.3390/s25196118" target="_blank" rel="noopener">A systematic literature review on the implementation and challenges of Zero Trust Architecture across domains</a>. <em>Sensors, 25</em>(19), Article 6118.</li>
+      <li>Qollakaj, K., Einler Larsson, L., &amp; Memeti, S. (2025). <a class="ext" href="https://www.sciencedirect.com/science/article/pii/S2590005625000645" target="_blank" rel="noopener">Cybersecurity of remote work migration: A study on the VPN security landscape post Covid-19 outbreak</a>. <em>Cyber Security and Applications</em>.</li>
+      <li>Rapid7. (2026, June 8). <a class="ext" href="https://www.rapid7.com/blog/post/etr-critical-check-point-vpn-zero-day-exploited-in-the-wild-cve-2026-50751/" target="_blank" rel="noopener"><em>Critical Check Point VPN zero-day exploited in the wild (CVE-2026-50751)</em></a>.</li>
+    </ul>
+    <div class="callout">
+      <span class="tag">About this tutorial</span>
+      <p>This web tutorial presents the findings of the cybersecurity executive summary <em>Securing VPN and APN Access in the Defense Industrial Base</em>, prepared for ISSC698 (Cybersecurity Studies: Capstone Practical), American Public University System. Meridian Defense Systems is a hypothetical organization used for instructional purposes.</p>
+    </div>
+    <div class="pager"></div>
+  </section>
+
+  </main>
+  <footer class="site-footer">
+    <p><strong>Securing VPN &amp; APN Access in the Defense Industrial Base</strong> — a management web tutorial.</p>
+    <p>Prepared by William Lewis · ISSC698 Cybersecurity Studies: Capstone Practical · American Public University System · 2026.</p>
+  </footer>
+</div>
+</div>
+
+<button class="to-top" id="toTop" aria-label="Back to top">↑</button>
+<script>
+(function(){
+  "use strict";
+  var ORDER = ["home","background","domain-network","domain-identity","domain-secops","domain-compliance","risk","recommendations","quiz","references"];
+  var pages = {}, links = {}, visited = {};
+  ORDER.forEach(function(id){
+    pages[id] = document.querySelector('.page[data-page="'+id+'"]');
+    links[id] = document.querySelector('.nav-link[data-page-link="'+id+'"]');
+  });
+
+  var crumbs = document.getElementById("crumbs");
+  var stepCount = document.getElementById("stepCount");
+  var visitedLabel = document.getElementById("visitedLabel");
+  var visitedFill = document.getElementById("visitedFill");
+
+  function decode(html){ var t=document.createElement("textarea"); t.innerHTML=html; return t.value; }
+
+  function buildPagers(){
+    ORDER.forEach(function(id, i){
+      var pager = pages[id].querySelector(".pager");
+      if(!pager) return;
+      var html = "";
+      if(i > 0){
+        var prev = pages[ORDER[i-1]];
+        html += '<a href="#'+ORDER[i-1]+'"><span class="dir">← Back</span><span class="ttl">'+prev.getAttribute("data-title")+'</span></a>';
+      }
+      if(i < ORDER.length-1){
+        var next = pages[ORDER[i+1]];
+        html += '<a class="next" href="#'+ORDER[i+1]+'"><span class="dir">Continue →</span><span class="ttl">'+next.getAttribute("data-title")+'</span></a>';
+      } else {
+        html += '<a class="next" href="#home"><span class="dir">Finished</span><span class="ttl">Return to Home</span></a>';
+      }
+      pager.innerHTML = html;
+    });
+  }
+
+  function updateVisited(){
+    var n = Object.keys(visited).length;
+    visitedLabel.textContent = n + " of " + ORDER.length + " sections visited";
+    visitedFill.style.width = Math.round(n/ORDER.length*100) + "%";
+  }
+
+  function show(id){
+    if(ORDER.indexOf(id) === -1) id = "home";
+    ORDER.forEach(function(p){
+      pages[p].classList.toggle("active", p === id);
+      if(links[p]){
+        if(p === id){ links[p].setAttribute("aria-current","page"); }
+        else { links[p].removeAttribute("aria-current"); }
+        links[p].classList.toggle("visited", !!visited[p]);
+      }
+    });
+    visited[id] = true;
+    links[id].classList.add("visited");
+    updateVisited();
+    var idx = ORDER.indexOf(id);
+    var group = decode(pages[id].getAttribute("data-group"));
+    var title = decode(pages[id].getAttribute("data-title"));
+    crumbs.innerHTML = "";
+    var g = document.createElement("span"); g.textContent = group;
+    var s = document.createElement("span"); s.className="sep"; s.textContent = "/";
+    var h = document.createElement("span"); h.className="here"; h.textContent = title;
+    crumbs.appendChild(g); crumbs.appendChild(s); crumbs.appendChild(h);
+    stepCount.textContent = "Section " + (idx+1) + " of " + ORDER.length;
+    document.title = title + " | Securing VPN & APN Access — Management Tutorial";
+    window.scrollTo(0,0);
+    closeMenu();
+  }
+
+  function route(){
+    var id = (location.hash || "#home").replace("#","");
+    show(id);
+  }
+  window.addEventListener("hashchange", route);
+
+  /* Mobile menu */
+  var sidebar = document.getElementById("sidebar");
+  var overlay = document.getElementById("overlay");
+  var menuBtn = document.getElementById("menuBtn");
+  function closeMenu(){
+    sidebar.classList.remove("open"); overlay.classList.remove("show");
+    menuBtn.setAttribute("aria-expanded","false");
+  }
+  menuBtn.addEventListener("click", function(){
+    var open = sidebar.classList.toggle("open");
+    overlay.classList.toggle("show", open);
+    menuBtn.setAttribute("aria-expanded", open ? "true" : "false");
+  });
+  overlay.addEventListener("click", closeMenu);
+  document.addEventListener("keydown", function(e){ if(e.key === "Escape") closeMenu(); });
+
+  /* Reading progress + back-to-top */
+  var bar = document.getElementById("readProgress");
+  var toTop = document.getElementById("toTop");
+  window.addEventListener("scroll", function(){
+    var doc = document.documentElement;
+    var max = doc.scrollHeight - window.innerHeight;
+    var pct = max > 0 ? (window.scrollY / max * 100) : 0;
+    bar.style.width = pct + "%";
+    toTop.classList.toggle("show", window.scrollY > 500);
+  }, {passive:true});
+  toTop.addEventListener("click", function(){ window.scrollTo({top:0, behavior:"smooth"}); });
+
+  /* Heat map interaction */
+  var chips = document.querySelectorAll(".risk-chip");
+  var hint = document.getElementById("hmHint");
+  chips.forEach(function(chip){
+    chip.addEventListener("click", function(){
+      var riskId = chip.getAttribute("data-risk");
+      var wasActive = chip.classList.contains("active");
+      chips.forEach(function(c){ c.classList.remove("active"); c.setAttribute("aria-pressed","false"); });
+      document.querySelectorAll("#riskTable tr").forEach(function(r){ r.classList.remove("hl"); });
+      if(!wasActive){
+        chip.classList.add("active");
+        chip.setAttribute("aria-pressed","true");
+        var row = document.querySelector('#riskTable tr[data-risk="'+riskId+'"]');
+        if(row){
+          row.classList.add("hl");
+          hint.textContent = riskId + " selected — highlighted in the register below.";
+          row.scrollIntoView({behavior:"smooth", block:"nearest"});
+        }
+      } else {
+        hint.textContent = "Select a risk (R1\u2013R7) above to highlight it in the register.";
+      }
+    });
+  });
+
+  /* Quiz */
+  var gradeBtn = document.getElementById("gradeBtn");
+  var resetBtn = document.getElementById("resetBtn");
+  var scoreBox = document.getElementById("scoreBox");
+  var scoreText = document.getElementById("scoreText");
+  gradeBtn.addEventListener("click", function(){
+    var qs = document.querySelectorAll("#quizForm .quiz-q");
+    var answered = 0, correct = 0;
+    qs.forEach(function(q){
+      var picked = q.querySelector("input:checked");
+      var fb = q.querySelector(".quiz-fb");
+      fb.classList.remove("ok","no");
+      if(!picked){ return; }
+      answered++;
+      if(picked.hasAttribute("data-correct")){
+        correct++;
+        fb.textContent = fb.getAttribute("data-ok");
+        fb.classList.add("ok");
+      } else {
+        fb.textContent = fb.getAttribute("data-no");
+        fb.classList.add("no");
+      }
+    });
+    if(answered < qs.length){
+      scoreBox.style.display = "block";
+      scoreBox.className = "callout gold quiz-score";
+      scoreText.textContent = "You answered " + answered + " of " + qs.length + " questions. Answer the remaining " + (qs.length-answered) + " and check again.";
+    } else {
+      scoreBox.style.display = "block";
+      scoreBox.className = correct === qs.length ? "callout green quiz-score" : "callout quiz-score";
+      scoreText.textContent = "You scored " + correct + " of " + qs.length + "." + (correct === qs.length ? " Excellent — you have the management picture." : " Review the feedback above, then retake the check if you like.");
+      resetBtn.style.display = "inline-block";
+    }
+  });
+  resetBtn.addEventListener("click", function(){
+    document.querySelectorAll("#quizForm input:checked").forEach(function(i){ i.checked = false; });
+    document.querySelectorAll("#quizForm .quiz-fb").forEach(function(f){ f.classList.remove("ok","no"); f.textContent=""; });
+    scoreBox.style.display = "none";
+    resetBtn.style.display = "none";
+    window.scrollTo({top:0, behavior:"smooth"});
+  });
+
+  buildPagers();
+  route();
+})();
+</script>
+</body>
+</html>
