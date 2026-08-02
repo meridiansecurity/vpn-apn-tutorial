@@ -235,6 +235,13 @@ tr.hl{background:var(--amber-wash)!important;outline:2px solid var(--gold-bright
 }
 .to-top.show{display:flex}
 
+footer.site-footer{
+  border-top:1px solid var(--line);padding:22px 34px 30px;font-size:13px;color:var(--steel);
+  max-width:880px;margin:0 auto
+}
+footer.site-footer p{margin-bottom:4px}
+footer.site-footer .disclosure{margin-top:12px;padding-top:12px;border-top:1px solid var(--line);font-size:12.5px;line-height:1.6;color:var(--steel);max-width:72ch}
+
 /* ---- Responsive ---- */
 @media (max-width:1020px){
   .menu-btn{display:inline-block}
@@ -256,6 +263,7 @@ tr.hl{background:var(--amber-wash)!important;outline:2px solid var(--gold-bright
   .page h2{font-size:27px}
   .card-grid{grid-template-columns:1fr}
   .rec{grid-template-columns:44px 1fr}
+  footer.site-footer{padding:20px 18px 28px}
 }
 </style>
 </head>
@@ -681,6 +689,12 @@ tr.hl{background:var(--amber-wash)!important;outline:2px solid var(--gold-bright
   </section>
 
   </main>
+  <footer class="site-footer">
+    <p><strong>Securing VPN &amp; APN Access in the Defense Industrial Base</strong> — a management web tutorial.</p>
+    <p>Prepared by William Lewis · ISSC698 Cybersecurity Studies: Capstone Practical · American Public University System · 2026.</p>
+    <p class="disclosure"><strong>Disclosure:</strong> In place of a drag-and-drop website builder, this site was designed and coded with the assistance of an AI tool (Anthropic's Claude), which was used for the HTML, styling, and page structure. All research, analysis, risk assessment, and written content are the author's own work, drawn from the capstone executive summary <em>Securing VPN and APN Access in the Defense Industrial Base</em>. Meridian Defense Systems is a hypothetical organization used for instructional purposes.</p>
+  </footer>
+
 <button class="to-top" id="toTop" aria-label="Back to top">↑</button>
 <script>
 (function(){
